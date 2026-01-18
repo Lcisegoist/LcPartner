@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import SideBar from "./components/SideBar/SideBar";
 import Main from "./components/Main/Main";
 import { useChatStore } from "./context/useChatStore";
+import ContextProvider from './context/Context.jsx'
 
 const App = () => {
   // const initVoiceRecognition = useChatStore(
@@ -15,8 +16,11 @@ const App = () => {
 
   return (
     <>
-      <SideBar />
-      <Main />
+      <ContextProvider>
+        <SideBar />
+        <Main />
+      </ContextProvider>
+
     </>
   );
 };

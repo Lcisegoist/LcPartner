@@ -1,6 +1,6 @@
 export interface StoreProps {
   input: string;
-  recentPrompt: string;
+  recentPrompt: { id: string, prompt: string, response: string }[];
   prevPrompt: string[];
   showResult: boolean;
   loading: boolean;

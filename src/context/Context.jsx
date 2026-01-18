@@ -1,11 +1,12 @@
 import { createContext, useState, useEffect } from "react";
-import runChat from "../config/deepseek";
+import runChat from "@/config/deepseek";
 
 export const Context = createContext();
 
 const ContextProvider = (props) => {
   const [historyResponse, setHistoryResponse] = useState([]); //存储一个对话的历史回复，在新建对话时清空
   const [input, setInput] = useState(""); //用户输入
+  const [tempInput, setTempInput] = useState("") //最近的一次输入，用于发送请求到接收res扩充recentPrompt之间空窗期
   const [recentPrompt, setRecentPrompt] = useState([]); //存储最近一次对话的内容，在navibar显示历史对话
   const [prevPrompt, setPrevprompt] = useState([]); //存储历史提问列表
   const [showResult, setShowResult] = useState(false); //控制主界面的视图切换
@@ -55,24 +56,31 @@ const ContextProvider = (props) => {
     setHistoryResponse([]);
     setRecentPrompt([]);
   };
+  //发送请求：
   const onSent = async (prompt) => {
     if (loading) {
       alert("正在生成回答，请稍后再试");
       return;
     } // Prevent multiple calls if already loading
-
+    setInput("")
     setLoading(true);
     setShowResult(true);
 
     //发送请求立马清空输入框
     let response;
     //TODO:发送请求携带该对话历史信息
+    console.log("tytytyty", prompt)
     if (prompt !== undefined) {
+      //语音输入
+      setTempInput(prompt)
       response = await runChat(prompt);
-      if (recentPrompt.length === 0) setPrevprompt((prev) => [...prev, prompt]);
+      setPrevprompt((prev) => [...prev, prompt]);
     } else {
-      if (recentPrompt.length === 0) setPrevprompt((prev) => [...prev, input]);
+      setTempInput(input)
       response = await runChat(input);
+      //手动输入时
+      setPrevprompt((prev) => [...prev, input]);
+
     }
     let inputPrompt = prompt !== undefined ? prompt : input;
     setRecentPrompt((prev) => [
@@ -90,6 +98,7 @@ const ContextProvider = (props) => {
 
   const contextValue = {
     recognition,
+    tempInput,
     prevPrompt,
     setPrevprompt,
     onSent,

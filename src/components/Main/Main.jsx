@@ -1,10 +1,8 @@
 import React, { useContext } from "react";
 import "./Main.css";
-import { assets } from "../../assets/assets";
-import { Context } from "../../context/Context";
-import markdownIt from "markdown-it";
-import hljs from "highlight.js";
-
+import { assets } from "@/assets/assets";
+import { Context } from "@/context/Context.jsx";
+import MarkdownRenderer from "@/components/MarkdownRender/MarkdownRender.jsx";
 const Main = () => {
   const {
     recognition,
@@ -12,6 +10,7 @@ const Main = () => {
     recentPrompt,
     showResult,
     loading,
+    tempInput,
     resultData,
     setInput,
     input,
@@ -19,11 +18,6 @@ const Main = () => {
     openVoiceSearch,
     voiceSearch,
   } = useContext(Context);
-  //markdown解析
-  const md = markdownIt({
-    html: true,
-    highlight: (code, lang) => hljs.highlight(code, { language: lang }).value,
-  });
 
   return (
     <div className="main">
@@ -84,11 +78,10 @@ const Main = () => {
                   <div className="flex flex-row ">
                     <div
                       // 设置flex-shrink-0
-                      className={`relative mr-3 w-8 h-8 flex-shrink-0 ${
-                        loading && !item.response
-                          ? "after:content-[''] after:absolute after:top-0 after:right-0 after:w-[5px] after:h-[5px] after:bg-sky-600 after:rounded-full after:animate-ping"
-                          : ""
-                      }`}
+                      className={`relative mr-3 w-8 h-8 flex-shrink-0 ${loading && !item.response
+                        ? "after:content-[''] after:absolute after:top-0 after:right-0 after:w-[5px] after:h-[5px] after:bg-sky-600 after:rounded-full after:animate-ping"
+                        : ""
+                        }`}
                     >
                       <img
                         className="w-8 h-8 rounded-md"
@@ -96,12 +89,10 @@ const Main = () => {
                         alt=""
                       />
                     </div>
-                    <div
-                      className="markdown-content"
-                      dangerouslySetInnerHTML={{
-                        __html: md.render(item.response || ""),
-                      }}
-                    />
+                    <div className="markdown-content w-full overflow-hidden">
+                      {/* 如果数据还没流式传输完，可能需要处理 loading 状态，这里假设 item.response 是完整文本 */}
+                      <MarkdownRenderer content={item.response || ""} />
+                    </div>
                   </div>
                 </div>
               );
@@ -114,7 +105,7 @@ const Main = () => {
                     src={assets.user_icon}
                     alt=""
                   />
-                  <p className="bg-gray-100 px-3 py-2 rounded-xl">{input}</p>
+                  <p className="bg-gray-100 px-3 py-2 rounded-xl">{tempInput}</p>
                 </div>
                 <div className="flex flex-row items-center gap-2">
                   <img
@@ -134,6 +125,7 @@ const Main = () => {
         <div className="main-bottom">
           <div className="search-box">
             <input
+              className="text-gray-800"
               onChange={(e) => setInput(e.target.value)}
               value={input}
               type="text"
@@ -160,7 +152,7 @@ const Main = () => {
             </div>
           </div>
           <p className="bottom-info">
-            yuanAI 可能会显示不准确的信息，请仔细检查其回复。
+            LcPartner可能会显示不准确的信息，请仔细检查其回复。
           </p>
         </div>
       </div>

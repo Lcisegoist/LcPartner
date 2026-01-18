@@ -1,14 +1,20 @@
 @import "tailwindcss";
+
+/* typography插件，用于行内高亮*/
+@plugin "@tailwindcss/typography";
 .main {
   flex: 1;
-  min-height: 100vh;
-  padding-bottom: 15vh;
+  height: 100vh;
   position: relative;
+  padding-bottom: 15vh;
 }
 
 .main-container {
   max-width: 900px;
   margin: auto;
+  height: 100%;
+  overflow-y: auto;
+  padding-bottom: 20px;
 }
 .main .greet {
   margin: 50px 0px;
@@ -32,7 +38,7 @@
 .card-text {
   @apply m-4 text-base text-gray-700 cursor-pointer hover:bg-yellow-200;
 }
-.card-icon {
+.card-icon {  
   @apply w-9 h-9 rounded-full absolute bottom-2 right-2 bg-white p-2 w-10;
 }
 .markdown-content {

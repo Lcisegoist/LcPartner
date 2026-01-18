@@ -12,9 +12,9 @@
 
 `VoiceSearch`：是否使用语音输入
 
-`recentPrompt`：存储最近一次发送的问题
+`recentPrompt`：存储所有历史问题，用于在navibar上显示
 
-`prevPrompt`：存储所有历史问题，用于在navibar上显示
+`prevPrompt`：存储最近一次发送的问题
 
 `resultData`：ai回复的内容
 

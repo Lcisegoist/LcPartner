@@ -4,6 +4,7 @@
   min-height: 100vh;
   display: flex;
   animation: fadeIn 1.5s;
+  overflow: hidden;
 }
 
 @keyframes fadeIn {

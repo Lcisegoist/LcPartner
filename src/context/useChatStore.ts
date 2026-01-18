@@ -7,7 +7,8 @@ export const useChatStore = create<StoreProps>()(
     persist<StoreProps>(
         (set, get) => ({
             input: "",
-            recentPrompt: "",
+
+            recentPrompt: [],
             prevPrompt: [],
             showResult: false,
             loading: false,
@@ -117,6 +118,6 @@ export const useChatStore = create<StoreProps>()(
 
 
         }), {
-        name: "yuan-chat-storage",
+        name: "LcPartner-storage",
         storage: createJSONStorage(() => localStorage),
     }))
