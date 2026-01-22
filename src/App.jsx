@@ -19,6 +19,7 @@ const App = () => {
       <ContextProvider>
         <SideBar />
         <Main />
+
       </ContextProvider>
 
     </>

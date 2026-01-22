@@ -38,7 +38,8 @@ function getMockResponse(prompt) {
  * @param {string} prompt - 用户输入的提示文本
  * @returns {Promise<string>} - AI 生成的回复
  */
-async function runChat(prompt) {
+//prompt:用户最新输入的提示文本，recentPrompt为历史问题以及回答
+async function runChat(prompt, recentPrompt) {
   // 开发模式：返回模拟回复
   if (USE_MOCK_RESPONSE) {
     console.log("开发模式：使用模拟回复");
@@ -63,6 +64,20 @@ async function runChat(prompt) {
             role: "system",
             content: "你是一个有用的AI助手，帮助用户回答问题。"
           },
+          // 将 recentPrompt 转换为 DeepSeek 格式：user - assistant 对话对
+          ...(recentPrompt.length > 0
+            ? recentPrompt.flatMap(item => [
+              {
+                role: "user",
+                content: item.prompt
+              },
+              {
+                role: "assistant",
+                content: item.response
+              }
+            ])
+            : []
+          ),
           {
             role: "user",
             content: prompt
@@ -79,9 +94,9 @@ async function runChat(prompt) {
 
     const data = await response.json();
     console.log("DeepSeek API返回结果:", data);
-    
+
     if (data.choices && data.choices.length > 0 && data.choices[0].message) {
-      const response = {"id":data.id, "content":data.choices[0].message.content};
+      const response = { "id": data.id, "content": data.choices[0].message.content };
       return response;
     } else {
       throw new Error("API返回格式错误");

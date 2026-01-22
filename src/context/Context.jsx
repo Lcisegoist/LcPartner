@@ -4,6 +4,7 @@ import runChat from "@/config/deepseek";
 export const Context = createContext();
 
 const ContextProvider = (props) => {
+  const [inchat, setInchat] = useState(false);
   const [historyResponse, setHistoryResponse] = useState([]); //存储一个对话的历史回复，在新建对话时清空
   const [input, setInput] = useState(""); //用户输入
   const [tempInput, setTempInput] = useState("") //最近的一次输入，用于发送请求到接收res扩充recentPrompt之间空窗期
@@ -50,7 +51,21 @@ const ContextProvider = (props) => {
       alert("正在生成回答，请稍后再试");
     }
   };
+  //新建对话
   const newChat = () => {
+    // 如果当前有对话内容，将第一个消息添加到历史记录
+    if (recentPrompt.length > 0) {
+      const firstPrompt = recentPrompt[0].prompt;
+      setPrevprompt((prev) => {
+        // 避免重复添加相同的提示
+        if (!prev.includes(firstPrompt)) {
+          return [...prev, firstPrompt];
+        }
+        return prev;
+      });
+    }
+
+    setInchat(false); // 重置为 false，让下一次发送消息不会新建prevprompt
     setLoading(false);
     setShowResult(false);
     setHistoryResponse([]);
@@ -70,17 +85,21 @@ const ContextProvider = (props) => {
     let response;
     //TODO:发送请求携带该对话历史信息
     console.log("tytytyty", prompt)
+
+    // 第一次发送消息时，将其添加到历史记录
+    if (!inchat && recentPrompt.length === 0) {
+      const currentPrompt = prompt !== undefined ? prompt : input;
+      setPrevprompt((prev) => [...prev, currentPrompt]);
+      setInchat(true);
+    }
+
     if (prompt !== undefined) {
       //语音输入
       setTempInput(prompt)
-      response = await runChat(prompt);
-      setPrevprompt((prev) => [...prev, prompt]);
+      response = await runChat(prompt, recentPrompt);
     } else {
       setTempInput(input)
-      response = await runChat(input);
-      //手动输入时
-      setPrevprompt((prev) => [...prev, input]);
-
+      response = await runChat(input, recentPrompt);
     }
     let inputPrompt = prompt !== undefined ? prompt : input;
     setRecentPrompt((prev) => [
