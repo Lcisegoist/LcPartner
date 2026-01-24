@@ -1,18 +1,20 @@
-import React, { useContext, useState } from 'react'
+import React, { useState } from 'react'
 import './SideBard.css'
 import { assets } from '../../assets/assets'
-import { Context } from '../../context/Context';
+import { useChatStore } from '../../context/useChatStore';
 
 const SideBar = () => {
     const [extended, setExtended] = useState(true);
-    const { onSent, prevPrompt, setRecentPrompt, newChat, setPrevprompt } = useContext(Context);
+    const { prevPrompt, setRecentPrompt, newChat, setPrevprompt, setShowResult } = useChatStore();
 
-    const loadPrompt = async (prompt) => {
-        setRecentPrompt(prompt);
-        await onSent(prompt);
+    const loadConversation = async (conversationData) => {
+        // 恢复完整的对话历史
+        setRecentPrompt(conversationData.conversation);
+        // 设置显示结果为 true，这样会显示对话内容
+        setShowResult(true);
     }
 
-    const deletePrompt = (index) => {
+    const deleteConversation = (index) => {
         const updatedPrevPrompt = [...prevPrompt];
         updatedPrevPrompt.splice(index, 1);
         setPrevprompt(updatedPrevPrompt);
@@ -23,7 +25,7 @@ const SideBar = () => {
     const handleDoubleClick = (index) => {
         const currentTime = new Date().getTime();
         if (currentTime - lastClickedTime < 300) {
-            deletePrompt(index);
+            deleteConversation(index);
         }
         lastClickedTime = currentTime;
     }
@@ -39,16 +41,18 @@ const SideBar = () => {
                 {extended &&
                     <div className="recent">
                         <p className='recent-title'>Recent</p>
-                        {prevPrompt.map((item, index) => (
+                        {prevPrompt.map((conversation, index) => (
                             <div
                                 key={index}
-                                onClick={() => loadPrompt(item)}
+                                onClick={() => loadConversation(conversation)}
                                 onDoubleClick={() => handleDoubleClick(index)}
-                                className="recent-entry"
+                                className="flex items-center mb-2 hover:bg-gray-200 hover:cursor-pointer rounded-lg p-2 justify-between"
                             >
-                                <img src={assets.message_icon} alt="" />
-                                <p>{item.slice(0, 18)}...</p>
-                                <img src={assets.trash} onClick={() => deletePrompt(index)} alt="" />
+                                <div className="flex items-center">
+                                    <img src={assets.message_icon} alt="" />
+                                    <p className="ml-1">{conversation.title}</p>
+                                </div>
+                                <img className="hover:scale-110 transition-all duration-300 hover:bg-gray-400 rounded-lg cursor-pointer" src={assets.trash} onClick={() => deleteConversation(index)} alt="" />
                             </div>
                         ))}
                     </div>

@@ -1,21 +1,33 @@
+export interface Conversation {
+  title: string;
+  conversation: Prompt[];
+}
+
+export interface Prompt {
+  id: string;
+  prompt: string;
+  response: string;
+}
 export interface StoreProps {
   input: string;
-  recentPrompt: { id: string, prompt: string, response: string }[];
-  prevPrompt: string[];
+  tempInput: string;
+  inchat: boolean;
+  recentPrompt: Prompt[];
+  prevPrompt: Conversation[];
   showResult: boolean;
   loading: boolean;
-  resultData: string;
+  resultData: string | { id: string; content: string };
   voiceSearch: boolean;
   recognition: any;
   recordingAnimation: boolean;
   setInput: (text: string) => void;
   newChat: () => void;
   onSent: (prompt?: string) => Promise<void>;
-  setRecentPrompt: (text: string) => void;
-  setPrevprompt: (text: string[]) => void;
+  setRecentPrompt: (messages: { id: string; prompt: string; response: string }[]) => void;
+  setPrevprompt: (conversations: Conversation[]) => void;
   setShowResult: (text: boolean) => void;
   setLoading: (text: boolean) => void;
-  setResultData: (text: string) => void;
+  setResultData: (text: string | { id: string; content: string }) => void;
   setVoiceSearch: (text: boolean) => void;
   setRecognition: (text: any) => void;
   setRecordingAnimation: (text: boolean) => void;

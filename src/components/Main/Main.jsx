@@ -1,7 +1,7 @@
-import React, { useContext } from "react";
+import React from "react";
 import "./Main.css";
 import { assets } from "@/assets/assets";
-import { Context } from "@/context/Context.jsx";
+import { useChatStore } from "@/context/useChatStore";
 import MarkdownRenderer from "@/components/MarkdownRender/MarkdownRender.jsx";
 const Main = () => {
   const {
@@ -11,13 +11,12 @@ const Main = () => {
     showResult,
     loading,
     tempInput,
-    resultData,
     setInput,
     input,
     handleKeyPress,
     openVoiceSearch,
     voiceSearch,
-  } = useContext(Context);
+  } = useChatStore();
 
   return (
     <div className="main">
