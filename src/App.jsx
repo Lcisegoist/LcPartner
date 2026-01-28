@@ -10,7 +10,7 @@ const App = () => {
   const clearStorage = useChatStore(
     (state) => state.clearStorage
   );
-
+  
   useEffect(() => {
     // 初始化语音识别服务
     initVoiceRecognition();

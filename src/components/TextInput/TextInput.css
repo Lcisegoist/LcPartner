@@ -1,0 +1,77 @@
+.search-box {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 20px;
+  background-color: #f0f4f9;
+  padding: 12px 20px;
+  border-radius: 50px;
+}
+
+.text-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  font-size: 18px;
+  line-height: 1.5;
+  resize: none;
+  min-height: 24px;
+  max-height: 120px;
+  overflow-y: auto;
+  font-family: inherit;
+  padding: 4px 8px;
+}
+
+.search-box img {
+  width: 24px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.search-box div {
+  gap: 15px;
+}
+
+/* 隐藏滚动条但保持功能 */
+.text-input::-webkit-scrollbar {
+  width: 4px;
+}
+
+.text-input::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.text-input::-webkit-scrollbar-thumb {
+  background-color: #d1d5db;
+  border-radius: 2px;
+}
+
+.mic-icon.recording {
+  animation: colorful-sound-wave-animation 1s infinite alternate;
+  border-radius: 50%;
+}
+
+@keyframes colorful-sound-wave-animation {
+  0% {
+    transform: scale(1);
+    background-color: #ff5733;
+  }
+  25% {
+    transform: scale(1.2);
+    background-color: #ffc300;
+  }
+  50% {
+    transform: scale(1);
+    background-color: #36dbca;
+  }
+  75% {
+    transform: scale(1.2);
+    background-color: #ff5733;
+  }
+  100% {
+    transform: scale(1);
+    background-color: #ffc300;
+  }
+}
+

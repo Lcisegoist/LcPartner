@@ -1,10 +1,22 @@
 import React, { useState } from "react";
 import ReactMarkdown from "react-markdown";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import { oneDark } from "react-syntax-highlighter/dist/cjs/styles/prism"; // 这里选择了类似 VSCode 的深色主题
+import { oneDark } from "react-syntax-highlighter/dist/cjs/styles/prism";
 import remarkGfm from "remark-gfm";
-import "./MarkdownRender.css"
-const MarkdownRenderer = ({ content }) => {
+import "./MarkdownRender.css";
+
+const MarkdownRenderer = ({ content, isHtml = false }) => {
+  // 如果是 HTML 内容，直接渲染
+  if (isHtml) {
+    return (
+      <div
+        className="html-content"
+        dangerouslySetInnerHTML={{ __html: content }}
+      />
+    );
+  }
+
+  // 否则渲染 Markdown
   return (
     <div className="prose max-w-none dark:prose-invert">
       <ReactMarkdown
@@ -38,13 +50,13 @@ const MarkdownRenderer = ({ content }) => {
                 {/* 代码高亮区域 */}
                 <SyntaxHighlighter
                   {...props}
-                  style={oneDark} // 使用类似 Gemini/VSCode 的深色主题
+                  style={oneDark}
                   language={language}
                   PreTag="div"
                   customStyle={{
                     margin: 0,
                     padding: "1.5rem",
-                    backgroundColor: "transparent", // 背景色由外层 div 控制
+                    backgroundColor: "transparent",
                     fontSize: "0.9rem",
                     lineHeight: "1.5",
                   }}
@@ -70,7 +82,7 @@ const CopyButton = ({ code }) => {
     try {
       await navigator.clipboard.writeText(code);
       setIsCopied(true);
-      setTimeout(() => setIsCopied(false), 2000); // 2秒后恢复图标
+      setTimeout(() => setIsCopied(false), 2000);
     } catch (err) {
       console.error("复制失败", err);
     }
@@ -83,7 +95,6 @@ const CopyButton = ({ code }) => {
     >
       {isCopied ? (
         <>
-          {/* 这里可以换成你的 assets.tick_icon 或者 SVG */}
           <svg className="w-4 h-4 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
           </svg>
@@ -91,7 +102,6 @@ const CopyButton = ({ code }) => {
         </>
       ) : (
         <>
-          {/* 这里可以换成你的 assets.copy_icon 或者 SVG */}
           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
           </svg>

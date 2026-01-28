@@ -1,7 +1,5 @@
 @import "tailwindcss";
 
-/* typography插件，用于行内高亮*/
-@plugin "@tailwindcss/typography";
 .main {
   flex: 1;
   height: 100vh;
@@ -42,7 +40,7 @@
   @apply w-9 h-9 rounded-full absolute bottom-2 right-2 bg-white p-2 w-10;
 }
 .markdown-content {
-  @apply border border-gray-300 rounded-md p-4 inset-shadow-xs shadow-xl/20;
+  @apply rounded-md p-4 ;
   h3 {
     @apply text-xl my-2;
   }
@@ -52,7 +50,7 @@
   ul {
     @apply my-2 pl-0;
     li {
-      @apply relative my-1 pl-4 before:content-[''] before:absolute before:left-0 before:top-[0.6em] before:w-[5px] before:h-[5px] before:bg-black before:rounded-full;
+      @apply relative my-1 pl-4 ;
     }
     /* 嵌套列表样式 */
     ul {
@@ -65,11 +63,14 @@
   position: absolute;
   bottom: 0;
   width: 100%;
-  max-width: 900px;
+  max-width: 860px;
   padding: 0px 20px;
-  margin: auto;
+  margin-top: 110px;
+  margin-left: 30px;
 }
-
+.blur-mask{
+  @apply absolute w-full h-12  bg-linear-to-b from-white via-white/20 to-transparent;
+}
 .search-box {
   display: flex;
   align-items: center;

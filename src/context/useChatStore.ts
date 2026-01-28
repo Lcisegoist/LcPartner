@@ -78,7 +78,7 @@ export const useChatStore = create<StoreProps>()(
                     const currentPrompt = prompt !== undefined ? prompt : input;
 
                     // 如果没有内容，不执行
-                    if (!currentPrompt.trim()) return;
+                    if (!currentPrompt) return;
 
                     // 设置加载状态
                     set({
@@ -174,8 +174,17 @@ export const useChatStore = create<StoreProps>()(
 
                 handleKeyPress: (e) => {
                     if (e.key === "Enter") {
-                        const { onSent } = get();
-                        onSent();
+                        if (e.shiftKey) {
+                            // Shift + Enter：允许换行（什么都不做）
+                            return;
+                        } else {
+                            // Enter：发送
+                            e.preventDefault(); // 阻止 textarea 默认换行
+                            const { input, onSent } = get();
+                            if (input.trim()) {
+                                onSent();
+                            }
+                        }
                     }
                 }
 

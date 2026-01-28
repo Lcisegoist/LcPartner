@@ -36,7 +36,7 @@ const SideBar = () => {
                 <img className='menu' src={assets.menu_icon} alt="" onClick={() => setExtended(!extended)} />
                 <div onClick={() => newChat()} className="new-chat">
                     <img src={assets.plus_icon} alt="" />
-                    {extended ? <p>New Chart</p> : null}
+                    {extended ? <p>New Chat</p> : null}
                 </div>
                 {extended &&
                     <div className="recent">

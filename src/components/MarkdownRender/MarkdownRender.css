@@ -1,4 +1,1 @@
 @import "tailwindcss";
-
-/* typography插件，用于行内高亮*/
-@plugin "@tailwindcss/typography";
