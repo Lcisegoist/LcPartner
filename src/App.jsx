@@ -2,48 +2,30 @@ import React, { useEffect } from "react";
 import SideBar from "./components/SideBar/SideBar";
 import Main from "./components/Main/Main";
 import { useChatStore } from "./context/useChatStore";
+import { ConfigProvider, theme } from "antd";
+import "./App.css"
 
 const App = () => {
+  const colorTheme = useChatStore((state) => state.colorTheme);
   const initVoiceRecognition = useChatStore(
-    (state) => state.initVoiceRecognition
+    (state) => state.initVoiceRecognition,
   );
-  const clearStorage = useChatStore(
-    (state) => state.clearStorage
-  );
-  
+
   useEffect(() => {
     // 初始化语音识别服务
     initVoiceRecognition();
+    if (colorTheme === "dark") document.documentElement.classList.add("dark")
   }, [initVoiceRecognition]);
 
   // 开发模式下的快捷键监听
-  useEffect(() => {
-    const handleKeyDown = (event) => {
-      // Ctrl/Cmd + Shift + C 清除缓存
-      if ((event.ctrlKey || event.metaKey) && event.shiftKey && event.key === 'C') {
-        event.preventDefault();
-        clearStorage();
-      }
-      // Ctrl/Cmd + Shift + R 强制刷新（清除缓存并重载页面）
-      if ((event.ctrlKey || event.metaKey) && event.shiftKey && event.key === 'R') {
-        event.preventDefault();
-        clearStorage();
-        window.location.reload();
-      }
-    };
 
-    if (process.env.NODE_ENV === 'development') {
-      window.addEventListener('keydown', handleKeyDown);
-      return () => window.removeEventListener('keydown', handleKeyDown);
-    }
-  }, [clearStorage]);
-
+  const { defaultAlgorithm, darkAlgorithm } = theme;
   return (
-    <>
+    <ConfigProvider theme={{ algorithm: colorTheme === "dark" ? darkAlgorithm : defaultAlgorithm }}>
       <SideBar />
       <Main />
 
-    </>
+    </ConfigProvider>
   );
 };
 

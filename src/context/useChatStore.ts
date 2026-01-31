@@ -23,8 +23,19 @@ export const useChatStore = create<StoreProps>()(
                 voiceSearch: false,
                 recognition: null,
                 recordingAnimation: false,
+                colorTheme: "light",
 
                 setInput: (text) => set({ input: text }),
+
+                // 设置明暗主题
+                setColorTheme: (theme) => {
+                    if (theme === "dark") {
+                        document.documentElement.classList.add("dark");
+                    } else {
+                        document.documentElement.classList.remove("dark");
+                    }
+                    set({ colorTheme: theme });
+                },
 
                 newChat: () => {
                     const { recentPrompt, prevPrompt } = get();

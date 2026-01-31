@@ -1,19 +1,6 @@
 @import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
 
-.main {
-  flex: 1;
-  height: 100vh;
-  position: relative;
-  padding-bottom: 15vh;
-}
-
-.main-container {
-  max-width: 900px;
-  margin: auto;
-  height: 100%;
-  overflow-y: auto;
-  padding-bottom: 20px;
-}
 .main .greet {
   margin: 50px 0px;
   font-size: 56px;
@@ -31,10 +18,10 @@
 }
 
 .card-container {
-  @apply h-[200px] bg-[#f0f4f9] rounded-lg relative;
+  @apply h-[200px] bg-[#f0f4f9] rounded-lg relative mx-3;
 }
 .card-text {
-  @apply m-4 text-base text-gray-700 cursor-pointer hover:bg-yellow-200;
+  @apply m-4 text-base text-gray-700 cursor-pointer hover:bg-yellow-200 dark:text-black max-[601px]:text-xs;
 }
 .card-icon {  
   @apply w-9 h-9 rounded-full absolute bottom-2 right-2 bg-white p-2 w-10;
@@ -60,16 +47,10 @@
 }
 
 .main-bottom {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  max-width: 860px;
-  padding: 0px 20px;
-  margin-top: 110px;
-  margin-left: 30px;
+  @apply absolute bottom-0 w-full max-w-[860px] px-5 mt-110 ml-3;
 }
 .blur-mask{
-  @apply absolute w-full h-12  bg-linear-to-b from-white via-white/20 to-transparent;
+  @apply absolute w-full h-12 bg-linear-to-b from-white via-white/20 to-transparent dark:from-black dark:via-black/20;
 }
 .search-box {
   display: flex;

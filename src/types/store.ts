@@ -20,6 +20,7 @@ export interface StoreProps {
   voiceSearch: boolean;
   recognition: any;
   recordingAnimation: boolean;
+  colorTheme: string;
   setInput: (text: string) => void;
   newChat: () => void;
   onSent: (prompt?: string) => Promise<void>;
@@ -33,5 +34,6 @@ export interface StoreProps {
   setRecordingAnimation: (text: boolean) => void;
   initVoiceRecognition: () => void;
   openVoiceSearch: () => void;
+  setColorTheme: (theme: string) => void;
   handleKeyPress: (e: KeyboardEvent) => void;
 }

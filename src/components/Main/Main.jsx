@@ -11,12 +11,12 @@ const Main = () => {
     useChatStore();
 
   return (
-    <div className="main">
+    <div className="flex-1 h-screen relative pb-[15vh] dark:bg-black">
       <div className="flex justify-between items-center mt-2">
-        <p className="text-2xl font-bold pl-2">LcPartner</p>
-        <img className="w-10 h-10 rounded-full" src={assets.user_icon} alt="" />
+        <p className="dark:text-white text-2xl font-bold pl-2">LcPartner</p>
+        <img className="w-10 h-10 rounded-full my-1 mx-3" src={assets.user_icon} alt="" />
       </div>
-      <div className="main-container">
+      <div className="max-w-[900px] mx-auto h-full overflow-y-auto pb-5">
         {!showResult ? (
           <div className="flex flex-col justify-center">
             <div className="text-6xl font-bold text-gray-500 mb-10">
@@ -25,7 +25,7 @@ const Main = () => {
               </p>
               <p className="text-5xl">How can I help you?</p>
             </div>
-            <div className="cards">
+            <div className="flex flex-row gap-5 mt-7 dark:invert">
               <div
                 className="card-container cursor-pointer hover:bg-gray-100 transition-all"
                 onClick={() => {
@@ -88,8 +88,8 @@ const Main = () => {
                         src={assets.user_icon}
                         alt=""
                       />
-                      <Card className="p-0 max-w-[80%] w-auto">
-                        <div className="whitespace-pre-wrap wrap-break-word leading-6">
+                      <Card size="small" className="p-0 max-w-[80%] w-auto">
+                        <div className="whitespace-pre-wrap break-all leading-6">
                           {item.prompt}
                         </div>
                       </Card>
@@ -97,11 +97,10 @@ const Main = () => {
                     <div className="flex flex-row ">
                       <div
                         // 设置flex-shrink-0
-                        className={`relative mr-3 w-8 h-8 shrink-0 ${
-                          loading && !item.response
-                            ? "after:content-[''] after:absolute after:top-0 after:right-0 after:w-[5px] after:h-[5px] after:bg-sky-600 after:rounded-full after:animate-ping"
-                            : ""
-                        }`}
+                        className={`relative mr-3 w-8 h-8 shrink-0 ${loading && !item.response
+                          ? "after:content-[''] after:absolute after:top-0 after:right-0 after:w-[5px] after:h-[5px] after:bg-sky-600 after:rounded-full after:animate-ping"
+                          : ""
+                          }`}
                       >
                         <img
                           className="w-8 h-8 rounded-md"
@@ -109,7 +108,7 @@ const Main = () => {
                           alt=""
                         />
                       </div>
-                      <Card className="max-w-[80%] border-none">
+                      <Card size="small" className="max-w-[80%] border-none">
                         <div className="markdown-content">
                           <MarkdownRenderer content={item.response || ""} />
                         </div>
@@ -126,10 +125,11 @@ const Main = () => {
                       src={assets.user_icon}
                       alt=""
                     />
-                    <AutoResizeTextarea
-                      value={tempInput}
-                      className="bg-gray-100 px-3 py-2 rounded-xl"
-                    ></AutoResizeTextarea>
+                    <Card className="!p-0 max-w-[80%] w-auto">
+                      <div className="whitespace-pre-wrap wrap-break-word leading-6">
+                        {tempInput}
+                      </div>
+                    </Card>
                   </div>
                   <div className="flex flex-row items-center gap-2">
                     <img
@@ -148,7 +148,7 @@ const Main = () => {
           </div>
         )}
 
-        <div className="main-bottom">
+        <div className="main-bottom dark:invert">
           <TextInput />
           <p className="bottom-info">
             LcPartner可能会显示不准确的信息，请仔细检查其回复。
