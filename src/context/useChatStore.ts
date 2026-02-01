@@ -3,10 +3,13 @@ import { persist, createJSONStorage } from "zustand/middleware";
 import { StoreProps } from "../types";
 import runChat from "../config/deepseek";
 import { devtools } from 'zustand/middleware'
+import { message } from "antd";
 interface ApiResponse {
     id: string;
     content: string;
 }
+
+let abortController: AbortController | null = null;
 
 export const useChatStore = create<StoreProps>()(
     devtools(
@@ -38,7 +41,16 @@ export const useChatStore = create<StoreProps>()(
                 },
 
                 newChat: () => {
-                    const { recentPrompt, prevPrompt } = get();
+                    const { recentPrompt, prevPrompt, loading } = get();
+
+                    // 如果正在加载，取消正在进行的请求
+                    if (loading) {
+                        if (abortController) {
+                            abortController.abort();
+                            abortController = null;
+                        }
+                        set({ loading: false, tempInput: "" });
+                    }
 
                     // 如果当前有对话内容，将完整的对话保存到历史记录
                     if (recentPrompt.length > 0) {
@@ -99,9 +111,12 @@ export const useChatStore = create<StoreProps>()(
                         showResult: true
                     });
 
+                    // 创建 AbortController 用于取消请求
+                    abortController = new AbortController();
+
                     try {
-                        // 调用 API，传递对话历史
-                        const apiResponse = await runChat(currentPrompt, recentPrompt);
+                        // 调用 API，传递对话历史和 abortController
+                        const apiResponse = await runChat(currentPrompt, recentPrompt, abortController.signal);
 
                         // 处理 API 响应
                         if (typeof apiResponse === 'string') {
@@ -128,14 +143,34 @@ export const useChatStore = create<StoreProps>()(
                                 loading: false
                             });
                         }
+                        abortController = null;
 
                     } catch (error) {
-                        console.error("Chat Error:", error);
-                        set({
-                            resultData: "Error fetching response.",
-                            loading: false
-                        });
+                        // 检查是否是取消请求
+                        if (error.name === 'AbortError') {
+                            message.error("请求已取消");
+                        } else {
+                            console.error("Chat Error:", error);
+                            set({
+                                resultData: "Error fetching response.",
+                                loading: false
+                            });
+                        }
+                        abortController = null;
                     }
+                },
+
+                // 取消正在进行的生成请求
+                stopGeneration: () => {
+                    if (abortController) {
+                        abortController.abort();
+                        abortController = null;
+                    }
+                    // 重置加载状态
+                    set({
+                        loading: false,
+                        tempInput: ""
+                    });
                 },
 
                 setRecentPrompt: (messages) => set({ recentPrompt: messages }),

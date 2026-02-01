@@ -24,6 +24,7 @@ export interface StoreProps {
   setInput: (text: string) => void;
   newChat: () => void;
   onSent: (prompt?: string) => Promise<void>;
+  stopGeneration: () => void;
   setRecentPrompt: (messages: { id: string; prompt: string; response: string }[]) => void;
   setPrevprompt: (conversations: Conversation[]) => void;
   setShowResult: (text: boolean) => void;

@@ -36,15 +36,29 @@ function getMockResponse(prompt) {
 /**
  * 调用 DeepSeek API 生成回复
  * @param {string} prompt - 用户输入的提示文本
+ * @param {Array} recentPrompt - 历史对话记录
+ * @param {AbortSignal} signal - 用于取消请求的 AbortSignal
  * @returns {Promise<string>} - AI 生成的回复
  */
 //prompt:用户最新输入的提示文本，recentPrompt为历史问题以及回答
-async function runChat(prompt, recentPrompt) {
+async function runChat(prompt, recentPrompt, signal) {
   // 开发模式：返回模拟回复
   if (USE_MOCK_RESPONSE) {
     console.log("开发模式：使用模拟回复");
     // 模拟网络延迟
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    await new Promise((resolve, reject) => {
+      const timeout = setTimeout(() => {
+        resolve(getMockResponse(prompt));
+      }, 1000);
+
+      // 如果收到取消信号，清除超时并拒绝 Promise
+      if (signal) {
+        signal.addEventListener('abort', () => {
+          clearTimeout(timeout);
+          reject(new DOMException('Aborted', 'AbortError'));
+        });
+      }
+    });
     return getMockResponse(prompt);
   }
 
@@ -85,7 +99,8 @@ async function runChat(prompt, recentPrompt) {
         ],
         temperature: 0.7,
         max_tokens: 2000
-      })
+      }),
+      signal // fetch会自动识别根据Signal的状态决定是否继续请求
     });
 
     if (!response.ok) {

@@ -8,9 +8,16 @@ const SideBar = () => {
   const buttonRef = useRef(null);  // 添加 ref 引用
   const isDragging = useRef(false);  // 标记是否在拖拽
   const [extended, setExtended] = useState(true);
-  const { prevPrompt, setRecentPrompt, newChat, setPrevprompt, setShowResult, colorTheme, setColorTheme } =
+  const [selectedIndex, setSelectedIndex] = useState(null); // 添加选中状态
+  const { prevPrompt, setRecentPrompt, newChat, setPrevprompt, setShowResult, stopGeneration, colorTheme, setColorTheme, loading } =
     useChatStore();
-  const loadConversation = async (conversationData) => {
+  const loadConversation = async (conversationData, index) => {
+    // 如果正在加载，取消正在进行的请求
+    if (loading) {
+      stopGeneration();
+    }
+    // 设置当前选中的索引
+    setSelectedIndex(index);
     // 恢复完整的对话历史
     setRecentPrompt(conversationData.conversation);
     // 设置显示结果为 true，这样会显示对话内容
@@ -25,6 +32,11 @@ const SideBar = () => {
     const updatedPrevPrompt = [...prevPrompt];
     updatedPrevPrompt.splice(index, 1);
     setPrevprompt(updatedPrevPrompt);
+    if (selectedIndex === index) {
+      setSelectedIndex(null);
+      setRecentPrompt([]);
+      setShowResult(false);
+    }
   };
 
   let lastClickedTime = 0;
@@ -113,9 +125,9 @@ const SideBar = () => {
               {prevPrompt.map((conversation, index) => (
                 <div
                   key={index}
-                  onClick={() => loadConversation(conversation)}
+                  onClick={() => loadConversation(conversation, index)}
                   onDoubleClick={() => handleDoubleClick(index)}
-                  className="flex items-center mb-2 hover:bg-[#e2e6eb] hover:cursor-pointer rounded-lg p-2 justify-between"
+                  className={`flex items-center mb-2 hover:bg-[#e2e6eb] hover:cursor-pointer rounded-lg p-2 justify-between ${selectedIndex === index ? "bg-[#e2e6eb]" : ""}`}
                 >
                   <div className="flex items-center">
                     <img className="w-5" src={assets.message_icon} alt="" />
@@ -124,7 +136,10 @@ const SideBar = () => {
                   <img
                     className="w-5 hover:scale-110 transition-all duration-300 hover:bg-gray-400 rounded-lg cursor-pointer"
                     src={assets.trash}
-                    onClick={() => deleteConversation(index)}
+                    onClick={(e) => {
+                      e.stopPropagation(); // 阻止事件冒泡，防止触发 loadConversation
+                      deleteConversation(index);
+                    }}
                     alt=""
                   />
                 </div>

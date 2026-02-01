@@ -13,6 +13,7 @@
     "@google/genai": "^1.33.0",
     "@google/generative-ai": "^0.3.1",
     "@tailwindcss/vite": "^4.1.18",
+    "@tanstack/react-virtual": "^3.13.18",
     "@tiptap/extension-placeholder": "^3.17.1",
     "@tiptap/react": "^3.17.1",
     "@tiptap/starter-kit": "^3.17.1",
