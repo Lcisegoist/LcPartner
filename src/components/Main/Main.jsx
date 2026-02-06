@@ -55,8 +55,8 @@ const Main = () => {
 
   const rowVirtualizer = useVirtualizer({
     count: recentPrompt.length,
-    getScrollElement: () => parentRef.current,
-    estimateSize: () => 100, // 给一个预估高度，这里不需要非常精确
+    getScrollElement: () => parentRef.current, //返回虚拟列表对象
+    estimateSize: () => 100, // 给一个预估高度
     overscan: 5, // 预加载可视区域外的数量，防止滚动太快出现白屏
   });
   // 测试用：加载一个包含1000条对话历史的会话
@@ -75,7 +75,6 @@ const Main = () => {
   useEffect(() => {
     if (showResult && parentRef.current) {
       // 这里的逻辑可以根据需求调整，比如只有当用户接近底部时才自动滚动
-      // 简单粗暴的方式：
       const timeout = setTimeout(() => {
         rowVirtualizer.scrollToIndex(recentPrompt.length - 1, { align: 'end' }, { behavior: 'smooth' });
       }, 100); // 稍微延迟等待渲染
